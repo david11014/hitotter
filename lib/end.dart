@@ -35,11 +35,11 @@ class End extends StatelessWidget {
 
   Image get endImage {
     if (mark > 0) {
-      return Image.asset("images/char/1.png");
+      return Image.asset("assets/images/char/1.png");
     } else if (wasHitOtter) {
-      return Image.asset("images/char/2.png");
+      return Image.asset("assets/images/char/2.png");
     } else {
-      return Image.asset("images/char/3.png");
+      return Image.asset("assets/images/char/3.png");
     }
   }
 
@@ -57,8 +57,7 @@ class End extends StatelessWidget {
           height: size.height - 60,
           child: Row(
             children: [
-              Expanded(
-                  child: endImage),
+              Expanded(child: endImage),
               const SizedBox(width: 10),
               Expanded(
                   child: Column(
@@ -75,6 +74,8 @@ class End extends StatelessWidget {
                           onPressed: () {
                             AudioManager.instance.stopBgm();
                             totalMarks.clear();
+                            if (round == maxRound && totalScore() == 520)
+                              AudioManager.instance.onhitsign("end");
                             Navigator.pushAndRemoveUntil(
                                 context,
                                 MaterialPageRoute(
@@ -82,7 +83,7 @@ class End extends StatelessWidget {
                                 (route) => false);
                           },
                           child: const Text("返回主畫面")),
-                      round <= maxRound
+                      round < maxRound
                           ? FlatButton(
                               onPressed: () {
                                 Navigator.pushAndRemoveUntil(

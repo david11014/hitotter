@@ -68,7 +68,7 @@ class Otter extends SpriteComponent with Tappable, HasGameRef<GameHitOtter> {
     // wait 4 ~ 12S
     int waitSecond = Utility.getRandRangeInt(4, 12);
     Future.delayed(Duration(seconds: waitSecond), () async {
-      _signIndex = Utility.getRandRangeInt(0, 5);
+      _signIndex = Utility.getRandRangeInt(0, 12);
       _state = EOtterState.EOS_Sign;
     });
     Future.delayed(Duration(seconds: waitSecond + 2), reset);
@@ -95,7 +95,7 @@ class Otter extends SpriteComponent with Tappable, HasGameRef<GameHitOtter> {
 
     // calculate swim range
     _swimRange =
-        Offset(0, gameSize.y * 0.2) & Size(gameSize.x, gameSize.y * 0.8);
+        Offset(20, gameSize.y * 0.2) & Size(gameSize.x - 20, gameSize.y * 0.8);
 
     // update picture
     _updatePic();
@@ -136,9 +136,11 @@ class Otter extends SpriteComponent with Tappable, HasGameRef<GameHitOtter> {
   bool onTapDown(TapDownInfo info) {
     if (_state == EOtterState.EOS_Normal) {
       gameRef._score -= 58;
+      AudioManager.instance.onhitsign("bite");
       _tapWrong();
     } else if (_state == EOtterState.EOS_Sign) {
       gameRef._score += 67;
+      AudioManager.instance.onhitsign("$_signIndex");
       reset();
     }
 
@@ -235,19 +237,13 @@ class GameHitOtter extends FlameGame with HasTappables {
 
     // init text component style
     _remainTimeText = TextComponent(
-        textRenderer: TextPaint(
-            style: const TextStyle(color: Colors.white, fontSize: 20)),
-        anchor: Anchor.topCenter);
+        textRenderer: TextPaint(style: gametext), anchor: Anchor.topCenter);
 
     _scoreText = TextComponent(
-        textRenderer: TextPaint(
-            style: const TextStyle(color: Colors.white, fontSize: 20)),
-        anchor: Anchor.topCenter);
+        textRenderer: TextPaint(style: gametext), anchor: Anchor.topCenter);
 
     _roundText = TextComponent(
-        textRenderer: TextPaint(
-            style: const TextStyle(color: Colors.white, fontSize: 20)),
-        anchor: Anchor.topCenter);
+        textRenderer: TextPaint(style: gametext), anchor: Anchor.topCenter);
   }
 
   @override
